@@ -30,7 +30,7 @@ for rango in rangos:
     tn = telnetlib.Telnet(HOST,43)
     comando=COMANDO+rango
     tn.write(comando.encode('ascii')+ b"\n")
-    result=tn.read_all().decode('ascii')
+    result=tn.read_all().decode('ascii', 'ignore')
     lista_result=result.splitlines()
     for line in lista_result:
         if line.find("route:")>-1:
