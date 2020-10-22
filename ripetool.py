@@ -36,7 +36,7 @@ def carga_rangos(fichero):
             for linea in f:
                 try:
                     ip = ipaddress.IPv4Network(linea[:-1]) # para quitar el retorno de carro
-                    print(ip, "it is a correct network")
+                    #print(ip, "it is a correct network")
                     lista_rangos.append(linea[:-1]) 
                 except ValueError:
                     print(linea, "it is a incorrect network. Not loaded")
@@ -48,12 +48,12 @@ def carga_rangos(fichero):
 
 HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
-rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
 log=""
 hora = datetime.now()
 log="Fecha actual: " + str(hora) + "<BR>"
 texto=log
-print (log)
+texto2=""
+rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
 for rango in rangos:
     ruta=""
     origen=""
@@ -71,14 +71,15 @@ for rango in rangos:
     origen=origen.replace(" ", "")
     if (ruta!="")&(origen!=""):
         texto="El rango " + rango + " tiene objeto "+ ruta +" "+ origen
-        print (texto)
+        #print (texto)
         log=log+texto+"<br>" 
     else:
         texto= "El rango " + rango + " NO tiene objeto route"
         texto2="""<p style="color:#FF0000";>El rango """ + rango + """ NO tiene objeto route</p>"""
-        print (texto)
+        #print (texto)
         log=log+texto2+"<br>" 
         envia_correo(texto, texto2)
 if hora.hour==0:
     envia_correo("Resumen diario",log)
+print(log)
 
