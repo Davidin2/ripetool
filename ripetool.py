@@ -41,7 +41,6 @@ def carga_rangos(fichero):
                 except ValueError:
                     print(linea, "it is a incorrect network. Not loaded")
             print ("---------------Loaded Ranges---------------")
-            print(lista_rangos)
             return lista_rangos
     except (OSError, IOError) as e:
         print ("---------------No ranges to load---------------")
@@ -49,9 +48,12 @@ def carga_rangos(fichero):
 
 HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
-rangos=carga_rangos("rangos.txt")
+rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
 log=""
-
+hora = datetime.now()
+log="Fecha actual: " + str(hora) + "<BR>"
+texto=log
+print (log)
 for rango in rangos:
     ruta=""
     origen=""
@@ -77,7 +79,6 @@ for rango in rangos:
         print (texto)
         log=log+texto2+"<br>" 
         envia_correo(texto, texto2)
-hora = datetime.now()
 if hora.hour==0:
     envia_correo("Resumen diario",log)
 
