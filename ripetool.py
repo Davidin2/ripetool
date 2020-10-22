@@ -73,11 +73,11 @@ for rango in rangos:
         log=log+texto+"<br>" 
     else:
         texto= "El rango " + rango + " NO tiene objeto route"
+        texto2="""<p style="color:#FF0000";>El rango """ + rango + """ NO tiene objeto route</p>"""
         print (texto)
-        log=log+texto+"<br>" 
-        envia_correo(texto, texto)
+        log=log+texto2+"<br>" 
+        envia_correo(texto, texto2)
 hora = datetime.now()
-print (log)
 if hora.hour==0:
     envia_correo("Resumen diario",log)
 
