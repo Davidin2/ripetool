@@ -1,5 +1,32 @@
 import telnetlib
 import ipaddress
+from datetime import datetime
+from datetime import date
+import smtplib
+
+#MAILS=["tu@email1","tu@email2"]
+MAILS=["david.hernandezc@gmail.com"]
+
+def envia_correo(asunto, mensaje):
+    remitente = "david.hernandezc@gmail.com"
+    destinatario = MAILS
+    asunto="RIPETOOL: " + "ESPANA" + " "+ asunto
+    print("EMAIL with subject-->", asunto)
+    email = """From: %s
+To: %s
+MIME-Version: 1.0
+Content-type: text/html
+Subject: %s
+    
+%s
+""" % (remitente, destinatario, asunto, mensaje)
+    try:
+        smtp = smtplib.SMTP('localhost')
+        smtp.sendmail(remitente, MAILS, email)
+        print ("Email sent succesfully")
+    except:
+        print ("Error: we canot send the email")
+
 
 def carga_rangos(fichero):
     try:
@@ -23,6 +50,7 @@ def carga_rangos(fichero):
 HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 rangos=carga_rangos("rangos.txt")
+log=""
 
 for rango in rangos:
     ruta=""
@@ -37,10 +65,19 @@ for rango in rangos:
             ruta=line
         if line.find("origin:")>-1:
             origen=line
+    ruta=ruta.replace(" ", "")
+    origen=origen.replace(" ", "")
     if (ruta!="")&(origen!=""):
-        print ("El rango " + rango + " tiene objeto route:")
-        print (ruta)
-        print (origen)
+        texto="El rango " + rango + " tiene objeto "+ ruta +" "+ origen
+        print (texto)
+        log=log+texto+"<br>" 
     else:
-        print ("El rango " + rango + " NO tiene objeto route:")
+        texto= "El rango " + rango + " NO tiene objeto route"
+        print (texto)
+        log=log+texto+"<br>" 
+        envia_correo(texto, texto)
+hora = datetime.now()
+print (log)
+if hora.hour==0:
+    envia_correo("Resumen diario",log)
 
