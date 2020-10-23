@@ -11,7 +11,7 @@ def envia_correo(asunto, mensaje):
     remitente = "david.hernandezc@gmail.com"
     destinatario = MAILS
     asunto="RIPETOOL: " + "ESPANA" + " "+ asunto
-    print("EMAIL with subject-->", asunto)
+    #print("EMAIL with subject-->", asunto)
     email = """From: %s
 To: %s
 MIME-Version: 1.0
@@ -23,9 +23,9 @@ Subject: %s
     try:
         smtp = smtplib.SMTP('localhost')
         smtp.sendmail(remitente, MAILS, email)
-        print ("Email sent succesfully")
+        #print ("Email sent succesfully")
     except:
-        print ("Error: we canot send the email")
+        print ("Error: we canot send the email<BR>")
 
 
 def carga_rangos(fichero):
