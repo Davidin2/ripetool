@@ -32,7 +32,7 @@ def carga_rangos(fichero):
     try:
         with open(fichero, "r") as f:
             lista_rangos=[]
-            print ("---------------Load ranges from",fichero,"---------------")
+            #print ("---------------Load ranges from",fichero,"---------------")
             for linea in f:
                 try:
                     ip = ipaddress.IPv4Network(linea[:-1]) # para quitar el retorno de carro
@@ -40,7 +40,7 @@ def carga_rangos(fichero):
                     lista_rangos.append(linea[:-1]) 
                 except ValueError:
                     print(linea, "it is a incorrect network. Not loaded")
-            print ("---------------Loaded Ranges---------------")
+            #print ("---------------Loaded Ranges---------------")
             return lista_rangos
     except (OSError, IOError) as e:
         print ("---------------No ranges to load---------------")
@@ -50,10 +50,11 @@ HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
 hora = datetime.now()
-log="Fecha actual: " + str(hora) + "<BR>"
+log="Fecha actual: " + str(hora) + "<BR>\n"
 texto=log
 texto2=""
 rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
+#rangos=carga_rangos("rangos.txt")
 for rango in rangos:
     ruta=""
     origen=""
@@ -70,14 +71,19 @@ for rango in rangos:
     ruta=ruta.replace(" ", "")
     origen=origen.replace(" ", "")
     if (ruta!="")&(origen!=""):
-        texto="El rango " + rango + " tiene objeto "+ ruta +" "+ origen
+        if ((origen.find("12430")==-1)&(origen.find("6739")==-1)):
+            texto="El rango " + rango + " tiene objeto "+ ruta +" "+ origen + " Ojo,no es nuestro"
+            texto2="""<p style="color:#FF0000";>El rango """  + rango + " tiene objeto "+ ruta +" "+ origen + " Ojo,no es nuestro</p>"
+            envia_correo(texto, texto2)
+        else:
+            texto2="El rango " + rango + " tiene objeto "+ ruta +" "+ origen
         #print (texto)
-        log=log+texto+"<br>" 
+        log=log+texto2+"<br>\n" 
     else:
         texto= "El rango " + rango + " NO tiene objeto route"
         texto2="""<p style="color:#FF0000";>El rango """ + rango + """ NO tiene objeto route</p>"""
         #print (texto)
-        log=log+texto2+"<br>" 
+        log=log+texto2+"<br>\n" 
         envia_correo(texto, texto2)
 if hora.hour==0:
     envia_correo("Resumen diario",log)
