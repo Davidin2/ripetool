@@ -68,6 +68,7 @@ def carga_rangos(fichero):
         print ("---------------No ranges to load---------------")
         return list()   
 
+carga_config()
 HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
@@ -77,7 +78,6 @@ texto=log
 texto2=""
 #rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
 rangos=carga_rangos("rangos.txt")
-carga_config()
 for rango in rangos:
     ruta=""
     origen=""
