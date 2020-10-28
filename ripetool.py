@@ -3,8 +3,10 @@ import ipaddress
 from datetime import datetime
 from datetime import date
 import smtplib
+import configparser
 
-MAILS=["tu@email1","tu@email2"]
+ID=""                   #Para diferenciar si tienes varias instancias corriendo
+MAILS=["tu@email1","tu@email2"] #Direcciones de envío de mail
 
 def carga_config():
     global MAILS
@@ -36,7 +38,7 @@ def print_config():
 def envia_correo(asunto, mensaje):
     remitente = "david.hernandezc@gmail.com"
     destinatario = MAILS
-    asunto="RIPETOOL: " + "ESPANA" + " "+ asunto
+    asunto="RIPETOOL: " + ID + " " + asunto
     #print("EMAIL with subject-->", asunto)
     email = """From: %s
 To: %s
