@@ -5,7 +5,8 @@ from datetime import date
 import smtplib
 import configparser
 
-ID=""                   #Para diferenciar si tienes varias instancias corriendo
+AS=["AS1","AS2","AS3"]          #Lista de AS, tienen que ser 3
+ID=""                           #Para diferenciar si tienes varias instancias corriendo
 MAILS=["tu@email1","tu@email2"] #Direcciones de envío de mail
 
 def carga_config():
@@ -19,6 +20,10 @@ def carga_config():
                 ID=config['default']['ID']
             if 'MAILS' in config['default']:
                 MAILS=config['default']['MAILS'].split(sep=',')
+            if 'AS' in config['default']:
+                AS=config['default']['AS'].split(sep=',')
+
+
     except (OSError, IOError) as e:
         print ("No configuration file")
 
@@ -73,7 +78,7 @@ HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
 hora = datetime.now()
-log="Fecha actual: " + str(hora) + " RIPETOOL: " + ID + "<BR>\n"
+log="Actual Date: " + str(hora) + " RIPETOOL: " + ID + "<BR>\n"
 texto=log
 texto2=""
 #rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
@@ -94,21 +99,21 @@ for rango in rangos:
     ruta=ruta.replace(" ", "")
     origen=origen.replace(" ", "")
     if (ruta!="")&(origen!=""):
-        if ((origen.find("12430")==-1)&(origen.find("6739")==-1)):
-            texto="El rango " + rango + " tiene objeto "+ ruta +" "+ origen + " Ojo,no es nuestro"
-            texto2="""<p style="color:#FF0000";>El rango """  + rango + " tiene objeto "+ ruta +" "+ origen + " Ojo,no es nuestro</p>"
+        if ((origen.find(AS[0])==-1)&(origen.find(AS[1])==-1)&(origen.find(AS[2])==-1)):
+            texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
+            texto2="""<p style="color:#FF0000";>Rango """  + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS</p>"
             envia_correo(texto, texto2)
         else:
-            texto2="El rango " + rango + " tiene objeto "+ ruta +" "+ origen
+            texto2="Range " + rango + " have route object "+ ruta +" "+ origen
         #print (texto)
         log=log+texto2+"<br>\n" 
     else:
-        texto= "El rango " + rango + " NO tiene objeto route"
-        texto2="""<p style="color:#FF0000";>El rango """ + rango + """ NO tiene objeto route</p>"""
+        texto= "Range " + rango + " DOES NOT have route object"
+        texto2="""<p style="color:#FF0000";>Range """ + rango + """ DOES NOT have route object</p>"""
         #print (texto)
         log=log+texto2+"<br>\n" 
         envia_correo(texto, texto2)
 if hora.hour==0:
-    envia_correo("Resumen diario",log)
+    envia_correo("Daily report",log)
 print(log)
 
