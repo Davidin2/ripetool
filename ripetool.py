@@ -10,10 +10,13 @@ MAILS=["tu@email1","tu@email2"] #Direcciones de envío de mail
 
 def carga_config():
     global MAILS
+    global ID
     config = configparser.ConfigParser()
     try:
         with open ('ripetool.ini') as f:  #Falta gestionar si un id no existe en el fichero
             config.read_file(f)
+            if 'ID' in config['default']:
+                ID=config['default']['ID']
             if 'MAILS' in config['default']:
                 MAILS=config['default']['MAILS'].split(sep=',')
     except (OSError, IOError) as e:
@@ -21,15 +24,6 @@ def carga_config():
 
 def print_config():
     config="\r\nCurrent configuration:\r\n<BR>"
-    config=config + "Log to file every x pass: " + str(LOG_CADA) + "\r\n<BR>"
-    config=config + "Search IPs every x pass: " + str(BUSCA_IP_CADA) + "\r\n<BR>"
-    config=config + "Save dicc every x pass: " + str(GUARDA_DIC_CADA) + "\r\n<BR>"
-    config=config + "EMAIL if range fail: " + str(MAIL_SI_FALLO) + "\r\n<BR>"
-    config=config + "EMAIL if range recover: " + str(MAIL_SI_RECUPERA) + "\r\n<BR>"
-    config=config + "Search IP if less than: " + str(BUSCAIPS_SI_MENOS) + "\r\n<BR>"
-    config=config + "MAX IP to search in a range: " + str(MAXIMAS_IP_POR_RANGO) + "\r\n<BR>"
-    config=config + "MAX prefix network to search IP: " + str(MAXIMA_RED) + "\r\n<BR>"
-    config=config + "Lmit IPs in range to: " + str(TRUNC_IPS) + "\r\n<BR>"
     config=config + "ID: " + ID + "\r\n<BR>"
     config=config + "EMAILS: " + ",".join(MAILS) + "\r\n<BR>"
     return (config)
@@ -78,7 +72,7 @@ HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
 hora = datetime.now()
-log="Fecha actual: " + str(hora) + "<BR>\n"
+log="Fecha actual: " + str(hora) + " RIPETOOL: " + ID + "<BR>\n"
 texto=log
 texto2=""
 #rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
