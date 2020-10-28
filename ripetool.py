@@ -12,6 +12,7 @@ MAILS=["tu@email1","tu@email2"] #Direcciones de envío de mail
 def carga_config():
     global MAILS
     global ID
+    global AS
     config = configparser.ConfigParser()
     try:
         with open ('ripetool.ini') as f:  #Falta gestionar si un id no existe en el fichero
@@ -99,7 +100,7 @@ for rango in rangos:
     ruta=ruta.replace(" ", "")
     origen=origen.replace(" ", "")
     if (ruta!="")&(origen!=""):
-        if ((origen.find(AS[0])==-1)&(origen.find(AS[1])==-1)&(origen.find(AS[2])==-1)):
+        if ((origen.find(AS[0])==-1)and(origen.find(AS[1])==-1)and(origen.find(AS[2])==-1)):
             texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
             texto2="""<p style="color:#FF0000";>Rango """  + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS</p>"
             envia_correo(texto, texto2)
