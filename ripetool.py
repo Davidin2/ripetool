@@ -78,12 +78,14 @@ carga_config()
 HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
+fallo=0
 hora = datetime.now()
-log="Actual Date: " + str(hora) + " RIPETOOL: " + ID + "<BR>\n"
-texto=log
-texto2=""
-#rangos=carga_rangos("/home/ubuntu/ripe_espana/rangos.txt")
 rangos=carga_rangos("rangos.txt")
+log="-------------Start Date: " + str(hora) + "-------------<BR>RIPETOOL " + ID + " " + str(len(rangos)) + " Rangos<BR>\n"
+texto=log
+texto2="""<TABLE BORDER="1"> <TR><TH>RANGE</TH><TH>STATUS</TH><TH>OBJECT IN RIPE</TH></TR>"""
+log=log+texto2
+texto2=""
 for rango in rangos:
     ruta=""
     origen=""
@@ -102,18 +104,25 @@ for rango in rangos:
     if (ruta!="")&(origen!=""):
         if ((origen.find(AS[0])==-1)and(origen.find(AS[1])==-1)and(origen.find(AS[2])==-1)):
             texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
-            texto2="""<p style="color:#FF0000";>Rango """  + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS</p>"
-            envia_correo(texto, texto2)
+            texto2="""<TR bgcolor="red"><TD>"""  + rango + "</TD><TD>Have route object but not our AS</TD><TD>"+ ruta +" "+ origen + "</TD></TR>"
+            #envia_correo(texto, texto2)
+            fallo+=1
         else:
-            texto2="Range " + rango + " have route object "+ ruta +" "+ origen
+            texto2="<TR><TD>" + rango + "</TD><TD>Have route object</TD><TD>" + ruta +" "+ origen + "</TD></TR>"
         #print (texto)
-        log=log+texto2+"<br>\n" 
     else:
         texto= "Range " + rango + " DOES NOT have route object"
-        texto2="""<p style="color:#FF0000";>Range """ + rango + """ DOES NOT have route object</p>"""
+        texto2="""<TR bgcolor="red"><TD>""" + rango + "</TD><TD>DOES NOT have route object</TD><TD></TD></TR>"
         #print (texto)
-        log=log+texto2+"<br>\n" 
-        envia_correo(texto, texto2)
+        #envia_correo(texto, texto2)
+        fallo+=1
+    log=log+texto2 
+hora_fin = datetime.now()
+texto2="</table><BR>-------------End Date: " + str(hora_fin)
+log=log + texto2
+
+if (fallo>0):
+    envia_correo(str(fallo)+ " RANGES WITH PROBLEMS in RIPE",log)
 if hora.hour==0:
     envia_correo("Daily report",log)
 print(log)
