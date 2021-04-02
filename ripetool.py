@@ -79,7 +79,7 @@ HOST = "whois.ripe.net"
 COMANDO="-T route -xr --sources RIPE "
 log=""
 fallo=0
-hora = datetime.now()
+hora = datetime.now().replace(microsecond=0)
 rangos=carga_rangos("rangos.txt")
 log="-------------Start Date: " + str(hora) + "-------------<BR>RIPETOOL " + ID + " " + str(len(rangos)) + " Rangos<BR>\n"
 texto=log
@@ -117,7 +117,7 @@ for rango in rangos:
         #envia_correo(texto, texto2)
         fallo+=1
     log=log+texto2 
-hora_fin = datetime.now()
+hora_fin = datetime.now().replace(microsecond=0)
 texto2="</table><BR>-------------End Date: " + str(hora_fin)
 log=log + texto2
 
