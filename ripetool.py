@@ -123,7 +123,7 @@ for rango in rangos:
         #envia_correo(texto, texto2)
         fallo+=1
     log=log+texto2 
-
+log= log + "</table>"
 
 
 num_prefijos_antes=-1
@@ -187,7 +187,7 @@ texto="<br><br>These prefixes are now and they were not before: " + str(no_estab
 log=log+texto
 
 hora_fin = datetime.now().replace(microsecond=0)
-texto2="</table><BR>-------------End Date: " + str(hora_fin)
+texto2="<BR>-------------End Date: " + str(hora_fin)
 log=log + texto2
 
 if (fallo>0):
