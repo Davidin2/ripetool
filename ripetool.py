@@ -105,6 +105,8 @@ for rango in rangos:
             origen=line
     ruta=ruta.replace(" ", "")
     origen=origen.replace(" ", "")
+
+
     if (ruta!="")&(origen!=""):
         if ((origen.find(AS[0])==-1)and(origen.find(AS[1])==-1)and(origen.find(AS[2])==-1)):
             texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
@@ -149,6 +151,7 @@ for ass in AS:
             ruta=line
             ruta=ruta.replace(" ", "")
             ruta=ruta.replace("route:", "")
+            ruta=ruta+" AS"+ ass
             lista_prefijos_ahora.append(ruta)
 
 
