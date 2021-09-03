@@ -4,6 +4,7 @@ from datetime import datetime
 from datetime import date
 import smtplib
 import configparser
+import json
 
 AS=["AS1","AS2","AS3"]          #Lista de AS, tienen que ser 3
 ID=""                           #Para diferenciar si tienes varias instancias corriendo
@@ -90,6 +91,11 @@ texto=log
 texto2="""<TABLE BORDER="1"> <TR><TH>RANGE</TH><TH>STATUS</TH><TH>OBJECT IN RIPE</TH></TR>"""
 log=log+texto2
 texto2=""
+data = {}
+data["RIPETOOL: " + ID] = []
+
+
+
 for rango in rangos:
     ruta=""
     origen=""
@@ -112,18 +118,33 @@ for rango in rangos:
             texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
             texto2="""<TR bgcolor="red"><TD>"""  + rango + "</TD><TD>Have route object but not our AS</TD><TD>"+ ruta +" "+ origen + "</TD></TR>"
             #envia_correo(texto, texto2)
+            data["RIPETOOL: " + ID].append({
+                'range': rango,
+                'Status': 'Routed, but not in our AS',
+                'origin': origen[7:]})
+
             fallo+=1
         else:
             texto2="<TR><TD>" + rango + "</TD><TD>Have route object</TD><TD>" + ruta +" "+ origen + "</TD></TR>"
+            data["RIPETOOL: " + ID].append({
+                'range': rango,
+                'Status': 'Routed',
+                'origin': origen[7:]})
         #print (texto)
     else:
         texto= "Range " + rango + " DOES NOT have route object"
         texto2="""<TR bgcolor="red"><TD>""" + rango + "</TD><TD>DOES NOT have route object</TD><TD></TD></TR>"
+        data["RIPETOOL: " + ID].append({
+                'range': rango,
+                'Status': 'Not Routed',
+                'origin': ""})
         #print (texto)
         #envia_correo(texto, texto2)
         fallo+=1
     log=log+texto2 
 log= log + "</table>"
+with open('ultimo.json', 'w') as file:
+    json.dump(data, file, indent=4)
 
 
 num_prefijos_antes=-1
