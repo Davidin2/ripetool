@@ -9,7 +9,7 @@ import json
 AS=["AS1","AS2","AS3"]          #Lista de AS, tienen que ser 3
 ID=""                           #Para diferenciar si tienes varias instancias corriendo
 MAILS=["tu@email1","tu@email2"] #Direcciones de envío de mail
-PREFIX_DIFF=20            #diferencia de prefijos para mandar mail en valor absoluto
+PREFIX_DIFF=1            #diferencia de prefijos para mandar mail en valor absoluto
 
 def carga_config():
     global MAILS
@@ -108,7 +108,7 @@ for rango in rangos:
         if line.find("route:")>-1:
             ruta=line
         if line.find("origin:")>-1:
-            origen=line
+            origen=origen+"-"+line
     ruta=ruta.replace(" ", "")
     origen=origen.replace(" ", "")
 
