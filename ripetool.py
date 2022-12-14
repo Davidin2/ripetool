@@ -114,7 +114,7 @@ for rango in rangos:
 
 
     if (ruta!="")&(origen!=""):
-        if ((origen.find(AS[0])==-1)and(origen.find(AS[1])==-1)and(origen.find(AS[2])==-1)):
+        if (origen in " ".join(AS):
             texto="Range " + rango + " have route object "+ ruta +" "+ origen + " ALERT, It is not our AS"
             texto2="""<TR bgcolor="red"><TD>"""  + rango + "</TD><TD>Have route object but not our AS</TD><TD>"+ ruta +" "+ origen + "</TD></TR>"
             #envia_correo(texto, texto2)
